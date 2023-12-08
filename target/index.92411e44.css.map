@@ -1,0 +1,1 @@
+{"mappings":"AAAA;;;;AAIA","sources":["src/styles.css"],"sourcesContent":["body {\r\n    background-color: #ccc;\r\n}\r\n\r\nspan.card {\r\n    display: block;\r\n    height: 150px;\r\n    width: 150px;\r\n    border: 10px solid #eee\r\n}"],"names":[],"version":3,"file":"index.92411e44.css.map","sourceRoot":"/__parcel_source_root/"}
