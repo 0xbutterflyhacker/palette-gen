@@ -21,6 +21,15 @@ function ColorForm(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
         let e0 = e.currentTarget as HTMLFormElement
         props.fn(new Color.color(Number(e0.elements['rIn'].value), Number(e0.elements['gIn'].value), Number(e0.elements['bIn'].value)))
     }
+    function random(e): void {
+        e.preventDefault()
+        let r: number[] = Array.from({length: 3})
+        for (let i in r) r[i] = Math.round(Math.random() * 256)
+        let e0 = e.currentTarget.form as HTMLFormElement
+        e0.elements['rIn'].value = r[0]
+        e0.elements['gIn'].value = r[1]
+        e0.elements['bIn'].value = r[2]
+    }
     return (
         <form onSubmit={makeColor}>
             <fieldset>
@@ -30,7 +39,7 @@ function ColorForm(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
                 <label htmlFor="gIn">green.</label><br/><br/>
                 <input type='number' min={0} max={255} name='bIn' id='bIn' defaultValue={0}/><br/>
                 <label htmlFor="bIn">blue.</label><br/><br/>
-                <button type="submit">submit.</button><button type="reset">reset.</button>
+                <button type="submit">submit.</button><button type="reset">reset.</button><button onClick={random}>random.</button>
             </fieldset>
         </form>
     )
@@ -45,7 +54,30 @@ function ResultComp(props: {c: Color.color, fn: React.Dispatch<React.SetStateAct
         <>
             <h3>your color is: <span style={{color: `${props.c.hex}`}}>{`${props.c.hex}`}</span></h3><br/>
             <span className='chip' style={{background: `${props.c.hex}`}}></span><br/><br/>
+            <SchemeComp c={props.c}/>
             <ColorForm fn={props.fn}/>
+        </>
+    )
+}
+
+function SchemeComp(props: {c: Color.color}) {
+    return (
+        <>
+            <MonoScheme c={props.c}/>
+        </>
+    )
+}
+
+function MonoScheme(props: {c: Color.color}) {
+    return (
+        <>
+            <span className='chip' style={{background: `${props.c.darken(0.3).hex}`}}></span>
+            <span className='chip' style={{background: `${props.c.darken(0.2).hex}`}}></span>
+            <span className='chip' style={{background: `${props.c.darken(0.1).hex}`}}></span>
+            <span className='chip' style={{background: `${props.c.hex}`}}></span>
+            <span className='chip' style={{background: `${props.c.lighten(0.1).hex}`}}></span>
+            <span className='chip' style={{background: `${props.c.lighten(0.2).hex}`}}></span>
+            <span className='chip' style={{background: `${props.c.lighten(0.3).hex}`}}></span>
         </>
     )
 }
