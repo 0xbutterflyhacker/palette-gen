@@ -47,6 +47,27 @@ export class color {
         const sol = toRGB(mid)
         return sol
     }
+    comp(): color {
+        let mid: number[] = this.toHSL();
+        mid[0] += 180
+        mid[0] %= 360
+        let sol = toRGB(mid)
+        return sol
+    }
+    analogous3(): color[] {
+        let mid0: number[] = this.toHSL()
+        let mid1: number[] = this.toHSL()
+        let sol: color[] = Array.from({length: 2})
+        mid0[0] -= 30
+        if (mid0[0] > 359) mid0[0] %= 360
+        else if (mid0[0] < 0) mid0[0] += 360
+        mid1[0] += 30
+        if (mid1[0] > 359) mid1[0] %= 360
+        else if (mid1[0] < 0) mid1[0] += 360
+        sol[0] = toRGB(mid0)
+        sol[1] = toRGB(mid1)
+        return sol
+    }
 } 
 
 export function toRGB(l: number[]): color {
