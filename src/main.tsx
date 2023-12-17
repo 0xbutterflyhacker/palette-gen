@@ -10,7 +10,7 @@ function App() {
     return (
         <>
             <h1>colors.</h1>
-            {(!color) ? <IndexComp fn={setColor}/> : <ResultComp c={color}/>}
+            {(!color) ? <IndexComp fn={setColor}/> : <ResultComp c={color} fn={setColor}/>}
         </>
     )
 }
@@ -19,7 +19,7 @@ function ColorForm(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
     function makeColor(e): void {
         e.preventDefault()
         let e0 = e.currentTarget as HTMLFormElement
-        props.fn(new Color.color(e0.elements['rIn'].value, e0.elements['gIn'].value, e0.elements['bIn'].value))
+        props.fn(new Color.color(Number(e0.elements['rIn'].value), Number(e0.elements['gIn'].value), Number(e0.elements['bIn'].value)))
     }
     return (
         <form onSubmit={makeColor}>
@@ -40,10 +40,12 @@ function IndexComp(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
     return <ColorForm fn={props.fn}/>
 }
 
-function ResultComp(props: {c: Color.color}) {
+function ResultComp(props: {c: Color.color, fn: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
     return (
         <>
-            <h3>your color is: {props.c.hex}</h3>
+            <h3>your color is: <span style={{color: `${props.c.hex}`}}>{`${props.c.hex}`}</span></h3><br/>
+            <span className='chip' style={{background: `${props.c.hex}`}}></span><br/><br/>
+            <ColorForm fn={props.fn}/>
         </>
     )
 }

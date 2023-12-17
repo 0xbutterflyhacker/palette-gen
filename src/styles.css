@@ -1,0 +1,10 @@
+body {
+    background-color: #eee;
+}
+
+span.chip {
+    display: inline-block;
+    height: 200px;
+    width: 200px;
+    border: 7px solid white
+}
