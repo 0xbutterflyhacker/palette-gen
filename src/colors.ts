@@ -96,7 +96,6 @@ export function toRGB(l: number[]): color {
         rp = c
         bp = x
     }
-    console.log(`${rp} ${gp} ${bp}`)
 
     return new color(Math.round((rp+m)*255), Math.round((gp+m)*255), Math.round((bp+m)*255))
 }

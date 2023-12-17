@@ -51,22 +51,28 @@ function IndexComp(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
 
 function ChipComp(props: {c: Color.color}) {
     return (
-        <>
-            <span className='chip' style={{background: `${props.c.hex}`}}></span>
+        <div className='chip-container'>
+            <span className='chip' style={{background: `${props.c.hex}`}}></span><br/>
             <p className='chip-info'>
-                <p>{`rgb(${props.c.red}, ${props.c.green}, ${props.c.blue})`}</p>
-                <p>hex code: {props.c.hex}</p>
+                {`rgb(${props.c.red}, ${props.c.green}, ${props.c.blue})`}<br/>
+                hex code: {props.c.hex}
             </p>
-        </>
+        </div>
     )
 }
 
 function ResultComp(props: {c: Color.color, fn: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
     return (
         <>
-            <h3>your color is: <span style={{color: `${props.c.hex}`}}>{`${props.c.hex}`}</span></h3><br/>
-            <ChipComp c={props.c}/><br/><br/>
-            <SchemeComp c={props.c}/>
+            <div id='form-results'>
+                <h2>your color is:</h2><br/>
+                <div id='form-color'>
+                    <ChipComp c={props.c}/>
+                </div>
+            </div><br/><br/>
+            <div id='results'>
+                <SchemeComp c={props.c}/>
+            </div>
             <ColorForm fn={props.fn}/>
         </>
     )
@@ -75,9 +81,24 @@ function ResultComp(props: {c: Color.color, fn: React.Dispatch<React.SetStateAct
 function SchemeComp(props: {c: Color.color}) {
     return (
         <>
-            <MonoScheme c={props.c}/>
-            <CompScheme c={props.c}/>
-            <AnalogousScheme c={props.c}/>
+            <h3>monochromatic scheme:</h3>
+            <div id='mono'>
+                <MonoScheme c={props.c}/>
+            </div>
+            <br/>
+            <h3>complementary scheme:</h3>
+            <div id='comp'>
+                <CompScheme c={props.c}/>
+            </div>
+            <br/>
+            <h3>analogous scheme (3 color):</h3>
+            <div id='analogous3'>
+                <AnalogousScheme c={props.c} n={3}/>
+            </div>
+            <h3>analogous scheme (5 color):</h3>
+            <div id='analogous5'>
+                <AnalogousScheme c={props.c} n={5}/>
+            </div>
         </>
     )
 }
@@ -105,13 +126,24 @@ function CompScheme(props: {c: Color.color}) {
     )
 }
 
-function AnalogousScheme(props: {c: Color.color}) {
-    const c0 = props.c.analogous3()
-    return (
+function AnalogousScheme(props: {c: Color.color, n: number}) {
+    const c0 = props.c.analogous3();
+    const c1 = c0[0].analogous3();
+    const c2 = c0[1].analogous3();
+    if (props.n === 3) return (
         <>
             <ChipComp c={c0[0]}/>
             <ChipComp c={props.c}/>
             <ChipComp c={c0[1]}/>
+        </>
+    );
+    else return (
+        <>
+            <ChipComp c={c1[0]}/>
+            <ChipComp c={c0[0]}/>
+            <ChipComp c={props.c}/>
+            <ChipComp c={c0[1]}/>
+            <ChipComp c={c2[1]}/>
         </>
     )
 }
