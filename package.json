@@ -7,6 +7,7 @@
     "start": "parcel src/*.html --dist-dir=target --port 5000",
     "build": "tsc",
     "watch": "tsc --watch",
+    "clean": "rm -rf dist target .parcel-cache",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "prettier": {
@@ -26,5 +27,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "process": "^0.11.10"
   }
 }
