@@ -24,7 +24,7 @@ function ColorForm(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
     function random(e): void {
         e.preventDefault()
         let r: number[] = Array.from({length: 3})
-        for (let i in r) r[i] = Math.round(Math.random() * 256)
+        for (let i in r) r[i] = Math.round(Math.random() * 255)
         let e0 = e.currentTarget.form as HTMLFormElement
         e0.elements['rIn'].value = r[0]
         e0.elements['gIn'].value = r[1]
@@ -39,7 +39,7 @@ function ColorForm(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
                 <label htmlFor="gIn">green.</label><br/><br/>
                 <input type='number' min={0} max={255} name='bIn' id='bIn' defaultValue={0}/><br/>
                 <label htmlFor="bIn">blue.</label><br/><br/>
-                <button type="submit">submit.</button><button type="reset">reset.</button><button onClick={random}>random.</button>
+                <button type="submit">submit.</button><button onClick={random}>random.</button><button type="reset">reset.</button>
             </fieldset>
         </form>
     )

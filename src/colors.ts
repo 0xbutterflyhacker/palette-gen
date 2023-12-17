@@ -22,26 +22,28 @@ export class color {
         sol[2] = (cmax + cmin)/2
         sol[1] = (delta === 0) ? 0 : (delta)/(1-Math.abs(2*sol[2]-1))
         if (delta === 0) sol[0] = 0
-        else if (cmax === rp) {
-            sol[0] = 60 * (((gp-bp)/delta) % 6)
-        } else if (cmax === gp) {
-            sol[0] = 60 * (((bp-rp)/delta) + 2)
-        } else {
-            sol[0] = 60 * (((rp-gp)/delta) + 4)
+        else {
+            if (cmax === rp) {
+                sol[0] = 60 * (((gp-bp)/delta) % 6)
+            } else if (cmax === gp) {
+                sol[0] = 60 * (((bp-rp)/delta) + 2)
+            } else if (cmax === bp) {
+                sol[0] = 60 * (((rp-gp)/delta) + 4)
+            }
         }
+        if (sol[0] < 0) sol[0] += 360
         return sol
     }
 
     lighten(f: number): color {
         let mid: number[] = this.toHSL();
-        ((mid[2] + mid[2]*f) > 1) ? mid[2] = 1 : mid[2] += mid[2]*f;
-        (mid[2] === 0) ? mid[2] = f : mid[2] = mid[2];
+        (mid[2] === 0) ? mid[2] += f : ((mid[2] + mid[2]*f) > 1) ? mid[2] = 1 : mid[2] += mid[2]*f;
         const sol = toRGB(mid)
         return sol
     }
     darken(f: number): color {
         let mid: number[] = this.toHSL();
-        ((mid[2] - mid[2]*f) < 0) ? mid[2] = 0 : mid[2] -= mid[2]*f;
+        (mid[2] === 1) ? mid[2] -= f : ((mid[2] - mid[2]*f) < 0) ? mid[2] = 0 : mid[2] -= mid[2]*f
         const sol = toRGB(mid)
         return sol
     }
@@ -69,10 +71,11 @@ export function toRGB(l: number[]): color {
     } else if ((240 <= l[0]) && (l[0] < 300)) {
         rp = x
         bp = c
-    } else if ((300 <= l[0]) && (l[0] <= 360)) {
+    } else if ((300 <= l[0]) && (l[0] < 360)) {
         rp = c
         bp = x
     }
+    console.log(`${rp} ${gp} ${bp}`)
 
     return new color(Math.round((rp+m)*255), Math.round((gp+m)*255), Math.round((bp+m)*255))
 }
