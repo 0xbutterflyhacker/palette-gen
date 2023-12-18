@@ -22,7 +22,7 @@ div#results, div#form-results {
     flex-direction: column;
 }
 
-div#results #mono, div#results #comp, div#results #analogous3, div#results #analogous5, div#form-results #form-color {
+div#results [id], div#form-results #form-color {
     display: flex;
     justify-content: space-around;
 }

@@ -88,9 +88,21 @@ function SchemeComp(props: {c: Color.color}) {
             <br/>
             <h3>complementary scheme:</h3>
             <div id='comp'>
-                <CompScheme c={props.c}/>
+                <CompScheme c={props.c} split={false}/>
             </div>
             <br/>
+            <h3>split complementary scheme:</h3>
+            <div id='split-comp'>
+                <CompScheme c={props.c} split={true}/>
+            </div>
+            <h3>triadic scheme:</h3>
+            <div id='triadic'>
+                <TriadicScheme c={props.c}/>
+            </div>
+            <h3>square scheme:</h3>
+            <div id='square'>
+                <SquareScheme c={props.c}/>
+            </div>
             <h3>analogous scheme (3 color):</h3>
             <div id='analogous3'>
                 <AnalogousScheme c={props.c} n={3}/>
@@ -117,11 +129,45 @@ function MonoScheme(props: {c: Color.color}) {
     )
 }
 
-function CompScheme(props: {c: Color.color}) {
-    return (
+function CompScheme(props: {c: Color.color, split: boolean}) {
+    if (!props.split) return (
         <>
             <ChipComp c={props.c}/>
             <ChipComp c={props.c.comp()}/>
+        </>
+    );
+    else {
+        let c0: Color.color = props.c.comp()
+        let c1: Color.color[] = c0.analogous3()
+        return (
+            <>
+                <ChipComp c={props.c}/>
+                <ChipComp c={c1[0]}/>
+                <ChipComp c={c1[1]}/>
+            </>
+        )
+    }
+}
+
+function TriadicScheme(props: {c: Color.color}) {
+    const c0 = props.c.triadic()
+    return (
+        <>
+            <ChipComp c={c0[0]}/>
+            <ChipComp c={props.c}/>
+            <ChipComp c={c0[1]}/>
+        </>
+    )
+}
+
+function SquareScheme(props: {c: Color.color}) {
+    const c0 = props.c.square()
+    return (
+        <>
+            <ChipComp c={props.c}/>
+            <ChipComp c={c0[0]}/>
+            <ChipComp c={c0[1]}/>
+            <ChipComp c={c0[2]}/>
         </>
     )
 }

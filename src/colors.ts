@@ -50,22 +50,40 @@ export class color {
     comp(): color {
         let mid: number[] = this.toHSL();
         mid[0] += 180
-        mid[0] %= 360
+        if(mid[0] > 359) mid[0] %= 360
         let sol = toRGB(mid)
         return sol
     }
+    triadic(): color[] {
+        let mid: number[][] = Array.from({length: 2}).map((h) => this.toHSL())
+        mid[0][0] -= 120
+        if (mid[0][0] < 0) mid[0][0] += 360
+        mid[1][0] += 120
+        if (mid[1][0] > 359) mid[1][0] %= 360
+        let sol: color[] = mid.map(toRGB)
+        return sol
+    }
     analogous3(): color[] {
-        let mid0: number[] = this.toHSL()
-        let mid1: number[] = this.toHSL()
-        let sol: color[] = Array.from({length: 2})
-        mid0[0] -= 30
-        if (mid0[0] > 359) mid0[0] %= 360
-        else if (mid0[0] < 0) mid0[0] += 360
-        mid1[0] += 30
-        if (mid1[0] > 359) mid1[0] %= 360
-        else if (mid1[0] < 0) mid1[0] += 360
-        sol[0] = toRGB(mid0)
-        sol[1] = toRGB(mid1)
+        let mid: number[][] = Array.from({length: 2}).map((h) => this.toHSL())
+        mid[0][0] -= 30
+        if (mid[0][0] < 0) mid[0][0] += 360
+        mid[1][0] += 30
+        if (mid[1][0] > 359) mid[1][0] %= 360
+        let sol: color[] = mid.map(toRGB)
+        return sol
+    }
+    square(): color[] {
+        let mid = Array.from({length: 3}).map((h) => this.toHSL()).map((h, i, a) => {
+            if (i === 0) {
+                h[0] += 90
+                if (h[0] > 359) h[0] %= 360
+            } else {
+                h[0] = a[i-1][0] + 90
+                if (h[0] > 359) h[0] %= 360
+            }
+            return h
+        })
+        let sol: color[] = mid.map(toRGB)
         return sol
     }
 } 
