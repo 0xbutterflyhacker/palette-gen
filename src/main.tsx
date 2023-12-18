@@ -3,12 +3,18 @@ import * as ReactDOM from 'react-dom/client'
 
 import * as Color from 'src/colors'
 
-ReactDOM.createRoot(document.querySelector('#root')!).render(<App/>)
+ReactDOM.createRoot(document.querySelector('#root')!).render(<PaletteApp/>)
 
-function App() {
+function PaletteApp() {
     const [color, setColor] = React.useState<Color.color>()
     return (
         <>
+            <nav>
+                <ul>
+                    <li><a href="#">home.</a></li>
+                    <li><a href="./saved.html">saved colors.</a></li>
+                </ul>
+            </nav>
             <h1>colors.</h1>
             {(!color) ? <IndexComp fn={setColor}/> : <ResultComp c={color} fn={setColor}/>}
         </>
