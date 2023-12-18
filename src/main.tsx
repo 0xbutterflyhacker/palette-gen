@@ -1,20 +1,34 @@
 import React from 'react'
 import * as ReactDOM from 'react-dom/client'
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom'
 
 import * as Color from 'src/colors'
 
-ReactDOM.createRoot(document.querySelector('#root')!).render(<PaletteApp/>)
+const savedColors = React.createContext<Color.color[]>([])
 
-function PaletteApp() {
+ReactDOM.createRoot(document.querySelector('#root')!).render(<App/>)
+
+export default function App() {
+    return (
+        <Router>
+            <nav id='navbar'>
+                <ul>
+                    <li><Link to='/'>home.</Link></li>
+                    <li><Link to='/saved'>saved colors.</Link></li>
+                </ul>
+            </nav>
+            <Routes>
+                <Route path='/' Component={PalettePage}/>
+                <Route path='/saved' Component={SavedPage}/>
+            </Routes>
+        </Router>
+    )
+}
+
+function PalettePage() {
     const [color, setColor] = React.useState<Color.color>()
     return (
         <>
-            <nav>
-                <ul>
-                    <li><a href="#">home.</a></li>
-                    <li><a href="./saved.html">saved colors.</a></li>
-                </ul>
-            </nav>
             <h1>colors.</h1>
             {(!color) ? <IndexComp fn={setColor}/> : <ResultComp c={color} fn={setColor}/>}
         </>
@@ -68,12 +82,18 @@ function ChipComp(props: {c: Color.color}) {
 }
 
 function ResultComp(props: {c: Color.color, fn: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
+    const s = React.useContext(savedColors)
+    function save(): void {
+        let s0 = new Set(s)
+        if (!s0.has(props.c)) s.push(props.c)
+    }
     return (
         <>
             <div id='form-results'>
                 <h2>your color is:</h2><br/>
                 <div id='form-color'>
                     <ChipComp c={props.c}/>
+                    <button onClick={save}>save this color.</button>
                 </div>
             </div><br/><br/>
             <div id='results'>
@@ -196,6 +216,21 @@ function AnalogousScheme(props: {c: Color.color, n: number}) {
             <ChipComp c={props.c}/>
             <ChipComp c={c0[1]}/>
             <ChipComp c={c2[1]}/>
+        </>
+    )
+}
+
+function SavedPage() {
+    const c = React.useContext(savedColors).map((h) => <ChipComp c={h} key={h.hex}/>)
+    return (
+        <>
+            <h1>colors.</h1>
+            <h3>saved colors:</h3>
+            <div id='results'>
+                <div id='colors'>
+                    {c}
+                </div>
+            </div>
         </>
     )
 }

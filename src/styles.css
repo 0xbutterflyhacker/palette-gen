@@ -26,3 +26,6 @@ div#results [id], div#form-results #form-color {
     display: flex;
     justify-content: space-around;
 }
+div#results #colors {
+    flex-wrap: wrap;
+}
