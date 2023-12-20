@@ -1,31 +1,80 @@
 body {
+    background-color: #eee;
+}
+
+#content {
     display: flex;
     justify-content: center;
     flex-direction: column;
+}
+#content #schemes, #content #form-results, #content form {
+    display: flex;
+    flex-direction: column;
 
-    background-color: #eee;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#content form fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#content #form-results #form-color {
+    display: flex;
+    justify-content: center;
+}
+#content #schemes [id] {
+    display: flex;
+    justify-content: space-around;
 }
 
 span.chip {
     display: inline-block;
 
-    height: 200px;
-    width: 200px;
-    border: 7px solid white
+    height: 180px;
+    width: 180px;
+    border: 9px solid white
 }
 p.chip-info {
     text-align: center;
 }
 
-div#results, div#form-results {
+nav ul {
     display: flex;
-    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+
+    background-color: #333;
+    height: 100px;
+    margin-top: 0%;
 }
 
-div#results [id], div#form-results #form-color {
-    display: flex;
-    justify-content: space-around;
+nav li {
+    padding: 20px;
+    list-style-type: none;
 }
-div#results #colors {
-    flex-wrap: wrap;
+
+fieldset {
+    background-color: #ddd;
+}
+
+input[id*=r] {
+    border: none;
+    border-bottom: 2px solid red;
+}
+input[id*=g] {
+    border: none;
+    border-bottom: 2px solid green;
+}
+input[id*=b] {
+    border: none;
+    border-bottom: 2px solid blue;
+}
+
+button {
+    height: 50px;
+}
+
+*[data-vis='false'] {
+    display: none !important;
 }

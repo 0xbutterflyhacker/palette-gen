@@ -30,7 +30,9 @@ function PalettePage() {
     return (
         <>
             <h1>colors.</h1>
-            {(!color) ? <IndexComp fn={setColor}/> : <ResultComp c={color} fn={setColor}/>}
+            <div id='content'>
+                {(!color) ? <IndexComp fn={setColor}/> : <ResultComp c={color} fn={setColor}/>}
+            </div>
         </>
     )
 }
@@ -53,12 +55,12 @@ function ColorForm(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
     return (
         <form onSubmit={makeColor}>
             <fieldset>
-                <input type='number' min={0} max={255} name='rIn' id='rIn' defaultValue={0}/><br/>
-                <label htmlFor="rIn">red.</label><br/><br/>
-                <input type='number' min={0} max={255} name='gIn' id='gIn' defaultValue={0}/><br/>
-                <label htmlFor="gIn">green.</label><br/><br/>
-                <input type='number' min={0} max={255} name='bIn' id='bIn' defaultValue={0}/><br/>
-                <label htmlFor="bIn">blue.</label><br/><br/>
+                <label htmlFor="rIn">red.</label><br/>
+                <input type='number' min={0} max={255} name='rIn' id='rIn' defaultValue={0}/><br/><br/>
+                <label htmlFor="gIn">green.</label><br/>
+                <input type='number' min={0} max={255} name='gIn' id='gIn' defaultValue={0}/><br/><br/>
+                <label htmlFor="bIn">blue.</label><br/>
+                <input type='number' min={0} max={255} name='bIn' id='bIn' defaultValue={0}/><br/><br/>
                 <button type="submit">submit.</button><button onClick={random}>random.</button><button type="reset">reset.</button>
             </fieldset>
         </form>
@@ -70,8 +72,10 @@ function IndexComp(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
 }
 
 function ChipComp(props: {c: Color.color}) {
+    const c0 = props.c.toHSL()
     return (
         <div className='chip-container'>
+            <p className='chip-info'>{`hsl(${Math.round(c0[0])}, ${Math.round(c0[1] * 100)}%, ${Math.round(c0[2] * 100)}%)`}</p>
             <span className='chip' style={{background: `${props.c.hex}`}}></span><br/>
             <p className='chip-info'>
                 {`rgb(${props.c.red}, ${props.c.green}, ${props.c.blue})`}<br/>
@@ -87,16 +91,21 @@ function ResultComp(props: {c: Color.color, fn: React.Dispatch<React.SetStateAct
         let s0 = new Set(s)
         if (!s0.has(props.c)) s.push(props.c)
     }
+    function toggleHide(): void {
+        let h = document.querySelector('#schemes');
+        (h?.getAttribute('data-vis') === 'true') ? h.setAttribute('data-vis', 'false') : h?.setAttribute('data-vis', 'true')
+    }
     return (
         <>
             <div id='form-results'>
                 <h2>your color is:</h2><br/>
                 <div id='form-color'>
                     <ChipComp c={props.c}/>
-                    <button onClick={save}>save this color.</button>
                 </div>
+                <button className='save' onClick={save} style={{border: `2px solid ${props.c.hex}`}}>save this color.</button>
             </div><br/><br/>
-            <div id='results'>
+            <button onClick={toggleHide}>show/hide results.</button>
+            <div id='schemes' data-vis='true'>
                 <SchemeComp c={props.c}/>
             </div>
             <ColorForm fn={props.fn}/>
@@ -228,7 +237,7 @@ function SavedPage() {
             <h3>saved colors:</h3>
             <div id='results'>
                 <div id='colors'>
-                    {c}
+                    {(c.length === 0) ? <h5>no colors saved.</h5> : c}
                 </div>
             </div>
         </>

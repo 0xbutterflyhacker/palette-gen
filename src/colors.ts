@@ -5,9 +5,9 @@ export class color {
     hex: string
 
     constructor(r: number, g: number, b: number) {
-        this.red = r
-        this.green = g
-        this.blue = b
+        this.red = Math.abs(r) % 256
+        this.green = Math.abs(g) % 256
+        this.blue = Math.abs(b) % 256
         this.hex = `#${(r > 15) ? r.toString(16) : '0'+r.toString(16)}${(g > 15) ? g.toString(16) : '0'+g.toString(16)}${(b > 15) ? b.toString(16) : '0'+b.toString(16)}`
     }
 
