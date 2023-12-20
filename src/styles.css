@@ -7,7 +7,7 @@ body {
     justify-content: center;
     flex-direction: column;
 }
-#content #schemes, #content #form-results, #content form {
+#content #form-results, #content form, #content #schemes, #content #visibility, #results {
     display: flex;
     flex-direction: column;
 
@@ -23,9 +23,25 @@ body {
     display: flex;
     justify-content: center;
 }
-#content #schemes [id] {
+#content #schemes [id]{
     display: flex;
     justify-content: space-around;
+}
+#results #colors {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+#content #visibility .vis-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 25px;
+
+    padding-bottom: 15px;
+}
+#content #visibility .vis-group div {
+    padding: 10px;
 }
 
 span.chip {
