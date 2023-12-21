@@ -31,26 +31,26 @@ function PalettePage() {
         <>
             <h1>colors.</h1>
             <div id='content'>
-                {(!color) ? <IndexComp fn={setColor}/> : <ResultComp c={color} fn={setColor}/>}
+                {(!color) ? <IndexComp colorSetter={setColor}/> : <ResultComp currentColor={color} colorSetter={setColor}/>}
             </div>
         </>
     )
 }
 
-function ColorForm(props: {fn: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
+function ColorForm(props: {colorSetter: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
     function makeColor(e): void {
         e.preventDefault()
-        let e0 = e.currentTarget as HTMLFormElement
-        props.fn(new Color.color(Number(e0.elements['rIn'].value), Number(e0.elements['gIn'].value), Number(e0.elements['bIn'].value)))
+        let form = e.currentTarget as HTMLFormElement
+        props.colorSetter(new Color.color(Number(form.elements['rIn'].value), Number(form.elements['gIn'].value), Number(form.elements['bIn'].value)))
     }
     function random(e): void {
         e.preventDefault()
         let r: number[] = Array.from({length: 3})
         for (let i in r) r[i] = Math.round(Math.random() * 255)
-        let e0 = e.currentTarget.form as HTMLFormElement
-        e0.elements['rIn'].value = r[0]
-        e0.elements['gIn'].value = r[1]
-        e0.elements['bIn'].value = r[2]
+        let form = e.currentTarget.form as HTMLFormElement
+        form.elements['rIn'].value = r[0]
+        form.elements['gIn'].value = r[1]
+        form.elements['bIn'].value = r[2]
     }
     return (
         <form onSubmit={makeColor}>
@@ -67,29 +67,29 @@ function ColorForm(props: {fn: React.Dispatch<React.SetStateAction<Color.color|u
     )
 }
 
-function IndexComp(props: {fn: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
-    return <ColorForm fn={props.fn}/>
+function IndexComp(props: {colorSetter: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
+    return <ColorForm colorSetter={props.colorSetter}/>
 }
 
-function ChipComp(props: {c: Color.color}) {
-    const c0 = props.c.toHSL()
+function ChipComp(props: {currentColor: Color.color}) {
+    const c0 = props.currentColor.toHSL()
     return (
         <div className='chip-container'>
             <p className='chip-info'>{`hsl(${Math.round(c0[0])}, ${Math.round(c0[1] * 100)}%, ${Math.round(c0[2] * 100)}%)`}</p>
-            <span className='chip' style={{background: `${props.c.hex}`}}></span><br/>
+            <span className='chip' style={{background: `${props.currentColor.hex}`}}></span><br/>
             <p className='chip-info'>
-                {`rgb(${props.c.red}, ${props.c.green}, ${props.c.blue})`}<br/>
-                hex code: {props.c.hex}
+                {`rgb(${props.currentColor.red}, ${props.currentColor.green}, ${props.currentColor.blue})`}<br/>
+                hex code: {props.currentColor.hex}
             </p>
         </div>
     )
 }
 
-function ResultComp(props: {c: Color.color, fn: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
+function ResultComp(props: {currentColor: Color.color, colorSetter: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
     const s = React.useContext(savedColors)
     function save(): void {
         let s0 = new Set(s)
-        if (!s0.has(props.c)) s.push(props.c)
+        if (!s0.has(props.currentColor)) s.push(props.currentColor)
     }
     function toggleHide(e, location: string): void {
         let h = document.querySelector(`#${location}`);
@@ -100,29 +100,29 @@ function ResultComp(props: {c: Color.color, fn: React.Dispatch<React.SetStateAct
             <div id='form-results'>
                 <h2>your color is:</h2><br/>
                 <div id='form-color'>
-                    <ChipComp c={props.c}/>
+                    <ChipComp currentColor={props.currentColor}/>
                 </div>
-                <button className='save' onClick={save} style={{border: `2px solid ${props.c.hex}`}}>save this color.</button>
+                <button className='save' onClick={save} style={{border: `2px solid ${props.currentColor.hex}`}}>save this color.</button>
             </div>
             <button onClick={(e) => {
                 toggleHide(e, 'schemes')
             }}>show/hide results.</button>
             <div id='schemes' data-vis='true'>
-                <SchemeComp c={props.c}/>
+                <SchemeComp currentColor={props.currentColor}/>
             </div>
             <button onClick={(e) => {
                 toggleHide(e, 'visibility')
             }}>show/hide visibility.</button>
             <div id='visibility' data-vis='true'>
-                <VisibilityComp color={props.c}/>
+                <VisibilityComp currentColor={props.currentColor}/>
             </div>
-            <ColorForm fn={props.fn}/>
+            <ColorForm colorSetter={props.colorSetter}/>
         </>
     )
 }
 
-function VisibilityComp(props: {color: Color.color}) {
-    const baseColors = [new Color.color(0, 0, 0), new Color.color(55, 55, 55), new Color.color(127, 127, 127), new Color.color(210, 210, 210), new Color.color(255, 255, 255)].map((l) => <VisibilityBox text={l} background={props.color} key={`${props.color.hex} + ${l.hex}`}/>)
+function VisibilityComp(props: {currentColor: Color.color}) {
+    const baseColors = [new Color.color(0, 0, 0), new Color.color(55, 55, 55), new Color.color(127, 127, 127), new Color.color(210, 210, 210), new Color.color(255, 255, 255)].map((l) => <VisibilityBox text={l} background={props.currentColor} key={`${props.currentColor.hex} + ${l.hex}`}/>)
     return (
         <>
             {baseColors}
@@ -148,131 +148,131 @@ function VisibilityBox(props: {text: Color.color, background: Color.color}) {
     )
 }
 
-function SchemeComp(props: {c: Color.color}) {
+function SchemeComp(props: {currentColor: Color.color}) {
     return (
         <>
             <h3>monochromatic scheme:</h3>
             <div id='mono'>
-                <MonoScheme c={props.c}/>
+                <MonoScheme currentColor={props.currentColor}/>
             </div>
             <br/>
             <h3>complementary scheme:</h3>
             <div id='comp'>
-                <CompScheme c={props.c} split={false}/>
+                <CompScheme currentColor={props.currentColor} split={false}/>
             </div>
             <br/>
             <h3>split complementary scheme:</h3>
             <div id='split-comp'>
-                <CompScheme c={props.c} split={true}/>
+                <CompScheme currentColor={props.currentColor} split={true}/>
             </div>
             <h3>triadic scheme:</h3>
             <div id='triadic'>
-                <TriadicScheme c={props.c}/>
+                <TriadicScheme currentColor={props.currentColor}/>
             </div>
             <h3>square scheme:</h3>
             <div id='square'>
-                <SquareScheme c={props.c}/>
+                <SquareScheme currentColor={props.currentColor}/>
             </div>
             <h3>analogous scheme (3 color):</h3>
             <div id='analogous3'>
-                <AnalogousScheme c={props.c} n={3}/>
+                <AnalogousScheme currentColor={props.currentColor} schemeSize={3}/>
             </div>
             <h3>analogous scheme (5 color):</h3>
             <div id='analogous5'>
-                <AnalogousScheme c={props.c} n={5}/>
+                <AnalogousScheme currentColor={props.currentColor} schemeSize={5}/>
             </div>
         </>
     )
 }
 
-function MonoScheme(props: {c: Color.color}) {
+function MonoScheme(props: {currentColor: Color.color}) {
     return (
         <>
-            <ChipComp c={props.c.darken(0.3)}/>
-            <ChipComp c={props.c.darken(0.2)}/>
-            <ChipComp c={props.c.darken(0.1)}/>
-            <ChipComp c={props.c}/>
-            <ChipComp c={props.c.lighten(0.1)}/>
-            <ChipComp c={props.c.lighten(0.2)}/>
-            <ChipComp c={props.c.lighten(0.3)}/>
+            <ChipComp currentColor={props.currentColor.darken(0.3)}/>
+            <ChipComp currentColor={props.currentColor.darken(0.2)}/>
+            <ChipComp currentColor={props.currentColor.darken(0.1)}/>
+            <ChipComp currentColor={props.currentColor}/>
+            <ChipComp currentColor={props.currentColor.lighten(0.1)}/>
+            <ChipComp currentColor={props.currentColor.lighten(0.2)}/>
+            <ChipComp currentColor={props.currentColor.lighten(0.3)}/>
         </>
     )
 }
 
-function CompScheme(props: {c: Color.color, split: boolean}) {
+function CompScheme(props: {currentColor: Color.color, split: boolean}) {
     if (!props.split) return (
         <>
-            <ChipComp c={props.c}/>
-            <ChipComp c={props.c.comp()}/>
+            <ChipComp currentColor={props.currentColor}/>
+            <ChipComp currentColor={props.currentColor.comp()}/>
         </>
     );
     else {
-        let c0: Color.color = props.c.comp()
-        let c1: Color.color[] = c0.analogous3()
+        const complement: Color.color = props.currentColor.comp()
+        const splitComp: Color.color[] = complement.analogous3()
         return (
             <>
-                <ChipComp c={props.c}/>
-                <ChipComp c={c1[0]}/>
-                <ChipComp c={c1[1]}/>
+                <ChipComp currentColor={props.currentColor}/>
+                <ChipComp currentColor={splitComp[0]}/>
+                <ChipComp currentColor={splitComp[1]}/>
             </>
         )
     }
 }
 
-function TriadicScheme(props: {c: Color.color}) {
-    const c0 = props.c.triadic()
+function TriadicScheme(props: {currentColor: Color.color}) {
+    const triad: Color.color[] = props.currentColor.triadic()
     return (
         <>
-            <ChipComp c={c0[0]}/>
-            <ChipComp c={props.c}/>
-            <ChipComp c={c0[1]}/>
+            <ChipComp currentColor={triad[0]}/>
+            <ChipComp currentColor={props.currentColor}/>
+            <ChipComp currentColor={triad[1]}/>
         </>
     )
 }
 
-function SquareScheme(props: {c: Color.color}) {
-    const c0 = props.c.square()
+function SquareScheme(props: {currentColor: Color.color}) {
+    const square: Color.color[] = props.currentColor.square()
     return (
         <>
-            <ChipComp c={props.c}/>
-            <ChipComp c={c0[0]}/>
-            <ChipComp c={c0[1]}/>
-            <ChipComp c={c0[2]}/>
+            <ChipComp currentColor={props.currentColor}/>
+            <ChipComp currentColor={square[0]}/>
+            <ChipComp currentColor={square[1]}/>
+            <ChipComp currentColor={square[2]}/>
         </>
     )
 }
 
-function AnalogousScheme(props: {c: Color.color, n: number}) {
-    const c0 = props.c.analogous3();
-    const c1 = c0[0].analogous3();
-    const c2 = c0[1].analogous3();
-    if (props.n === 3) return (
+function AnalogousScheme(props: {currentColor: Color.color, schemeSize: number}) {
+    const analagous: Color.color[] = props.currentColor.analogous3()
+    const analagousLeft = analagous[0].analogous3()[0]
+    const analagousRight = analagous[1].analogous3()[1]
+    if (props.schemeSize === 3) return (
         <>
-            <ChipComp c={c0[0]}/>
-            <ChipComp c={props.c}/>
-            <ChipComp c={c0[1]}/>
+            <ChipComp currentColor={analagous[0]}/>
+            <ChipComp currentColor={props.currentColor}/>
+            <ChipComp currentColor={analagous[1]}/>
         </>
     );
     else return (
         <>
-            <ChipComp c={c1[0]}/>
-            <ChipComp c={c0[0]}/>
-            <ChipComp c={props.c}/>
-            <ChipComp c={c0[1]}/>
-            <ChipComp c={c2[1]}/>
+            <ChipComp currentColor={analagousLeft}/>
+            <ChipComp currentColor={analagous[0]}/>
+            <ChipComp currentColor={props.currentColor}/>
+            <ChipComp currentColor={analagous[1]}/>
+            <ChipComp currentColor={analagousRight}/>
         </>
     )
 }
 
 function SavedPage() {
-    const c = React.useContext(savedColors).map((h) => <ChipComp c={h} key={h.hex}/>)
+    const savedList: React.JSX.Element[] = React.useContext(savedColors).map((h) => <ChipComp currentColor={h} key={h.hex}/>)
     return (
         <>
             <h1>colors.</h1>
             <h3>saved colors:</h3>
             <div id='results'>
                 <div id='colors'>
-                    {(c.length === 0) ? <h5>no colors saved.</h5> : c}
+                    {(savedList.length === 0) ? <h5>no colors saved.</h5> : savedList}
                 </div>
             </div>
         </>

@@ -42,7 +42,7 @@ export class color {
     }
     /**
      * lightens a color by a factor of f
-     * @param f - the percent to lighten a color by [0-1] -- e.g. to lighten by 30%, f = 0.3
+     * @param f - the lightening factor; [0-1] -- e.g. to lighten by 30%, f = 0.3
      * @returns the lightened color
      */
     lighten(f: number): color {
@@ -53,7 +53,7 @@ export class color {
     }
     /**
      * darkens a color by a factor of f
-     * @param f - the percent to darken a color by [0-1] -- e.g. to darken by 30%, f = 0.3
+     * @param f - the darkening factor; [0-1] -- e.g. to darken by 30%, f = 0.3
      * @returns the darkened color
      */
     darken(f: number): color {
