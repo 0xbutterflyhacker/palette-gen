@@ -1,96 +1,100 @@
 body {
-    background-color: #eee;
+  background-color: #eee;
 }
 
 #content {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
-#content #form-results, #content form, #content #schemes, #content #visibility, #results {
-    display: flex;
-    flex-direction: column;
+#content #form-results,
+#content form,
+#content #schemes,
+#content #visibility,
+#results {
+  display: flex;
+  flex-direction: column;
 
-    padding-top: 20px;
-    padding-bottom: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 #content form fieldset {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 #content #form-results #form-color {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-#content #schemes [id]{
-    display: flex;
-    justify-content: space-around;
+#content #schemes [id] {
+  display: flex;
+  justify-content: space-around;
 }
 #results #colors {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 #content #visibility .vis-group {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 25px;
 
-    padding-bottom: 15px;
+  padding-bottom: 15px;
 }
 #content #visibility .vis-group div {
-    padding: 10px;
+  padding: 10px;
 }
 
 span.chip {
-    display: inline-block;
+  display: inline-block;
 
-    height: 180px;
-    width: 180px;
-    border: 9px solid white
+  height: 180px;
+  width: 180px;
+  border: 9px solid white;
 }
 p.chip-info {
-    text-align: center;
+  text-align: center;
 }
 
 nav ul {
-    display: flex;
-    justify-content: start;
-    align-items: center;
+  display: flex;
+  justify-content: start;
+  align-items: center;
 
-    background-color: #333;
-    height: 100px;
-    margin-top: 0%;
+  background-color: #333;
+  height: 100px;
+  margin-top: 0%;
 }
 
 nav li {
-    padding: 20px;
-    list-style-type: none;
+  padding: 20px;
+  list-style-type: none;
 }
 
 fieldset {
-    background-color: #ddd;
+  background-color: #ddd;
 }
 
-input[id*=r] {
-    border: none;
-    border-bottom: 2px solid red;
+input[id*='r'] {
+  border: none;
+  border-bottom: 2px solid red;
 }
-input[id*=g] {
-    border: none;
-    border-bottom: 2px solid green;
+input[id*='g'] {
+  border: none;
+  border-bottom: 2px solid green;
 }
-input[id*=b] {
-    border: none;
-    border-bottom: 2px solid blue;
+input[id*='b'] {
+  border: none;
+  border-bottom: 2px solid blue;
 }
 
 button {
-    height: 50px;
+  height: 50px;
 }
 
 *[data-vis='false'] {
-    display: none !important;
+  display: none !important;
 }
