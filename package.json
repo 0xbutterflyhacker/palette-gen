@@ -2,7 +2,6 @@
   "name": "colors",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
   "scripts": {
     "start": "parcel src/*.html --dist-dir=target --port 5000",
     "build": "tsc",
@@ -30,6 +29,11 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.2",
     "process": "^0.11.10"
   }
 }
