@@ -15,7 +15,7 @@ export class color {
     }
     /**
      * converts a color object from rgb notation to hsl notation.
-     * @returns an array of numbers; element 0 is the hue [0-360), element 1 is the saturation [0-1], and element 2 is the lightness [0-1]
+     * @returns an array of numbers representing a color in hsl notation; sol[0] is the hue [0-360), sol[1] is the saturation [0-1], and sol[2] is the lightness [0-1]
      */
     toHSL(): number[] {
         let sol: number[] = Array.from({length: 3})
@@ -41,7 +41,7 @@ export class color {
         return sol
     }
     /**
-     * lightens a color by a factor of f
+     * lightens a color by a factor of f.
      * @param f - the lightening factor; [0-1] -- e.g. to lighten by 30%, f = 0.3
      * @returns the lightened color
      */
@@ -52,7 +52,7 @@ export class color {
         return sol
     }
     /**
-     * darkens a color by a factor of f
+     * darkens a color by a factor of f.
      * @param f - the darkening factor; [0-1] -- e.g. to darken by 30%, f = 0.3
      * @returns the darkened color
      */
@@ -63,7 +63,7 @@ export class color {
         return sol
     }
     /**
-     * computes a color's complement
+     * computes a color's complement.
      * @returns the complement of the color
      */
     comp(): color {
@@ -74,7 +74,7 @@ export class color {
         return sol
     }
     /**
-     * computes the 2 colors needed to create a triadic color scheme with (this) color
+     * computes the 2 colors needed to create a triadic color scheme with (this) color.
      * @returns an array of colors, such that (this), element 0, and element 1 are 120 deg apart each on the color wheel
      */
     triadic(): color[] {
@@ -87,7 +87,7 @@ export class color {
         return sol
     }
     /**
-     * computes the 2 colors needed to create an analogous color scheme, with (this) color at the center
+     * computes the 2 colors needed to create an analogous color scheme, with (this) color at the center.
      * @returns an array of colors, such that elements 0 and 1 are 30 deg away from (this) color on the color wheel
      */
     analogous3(): color[] {
@@ -100,7 +100,7 @@ export class color {
         return sol
     }
     /**
-     * computes the 3 colors needed to create a square color scheme with (this) color
+     * computes the 3 colors needed to create a square color scheme with (this) color.
      * @returns an array of colors, such that (this) color and each color in the array are 90 deg away from each other on the color wheel
      */
     square(): color[] {
@@ -120,9 +120,9 @@ export class color {
 } 
 
 /**
- * converts a color in hsl notation into rgb notation
- * @param l a color in hsl notation -- l[0] is hue [0-360), l[1] is saturation [0-1], l[2] is lightness [0-1]
- * @returns the converted color
+ * converts a color in hsl notation into rgb notation.
+ * @param l an array of numbers representing a color in hsl notation -- l[0] is hue [0-360), l[1] is saturation [0-1], l[2] is lightness [0-1]
+ * @returns the converted color as a color object
  */
 export function toRGB(l: number[]): color {
     let c: number = (1 - Math.abs(2*l[2]-1)) * l[1]

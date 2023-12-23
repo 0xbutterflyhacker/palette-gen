@@ -38,16 +38,16 @@ function PalettePage() {
 }
 
 function ColorForm(props: {colorSetter: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
-    function makeColor(e): void {
+    const makeColor = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault()
-        let form = e.currentTarget as HTMLFormElement
+        let form: HTMLFormElement = e.currentTarget as HTMLFormElement
         props.colorSetter(new Color.color(Number(form.elements['rIn'].value), Number(form.elements['gIn'].value), Number(form.elements['bIn'].value)))
     }
-    function random(e): void {
+    const randomizeColor = (e: React.MouseEvent<HTMLButtonElement>): void => {
         e.preventDefault()
         let r: number[] = Array.from({length: 3})
         for (let i in r) r[i] = Math.round(Math.random() * 255)
-        let form = e.currentTarget.form as HTMLFormElement
+        let form: HTMLFormElement = e.currentTarget.form as HTMLFormElement
         form.elements['rIn'].value = r[0]
         form.elements['gIn'].value = r[1]
         form.elements['bIn'].value = r[2]
@@ -61,7 +61,7 @@ function ColorForm(props: {colorSetter: React.Dispatch<React.SetStateAction<Colo
                 <input type='number' min={0} max={255} name='gIn' id='gIn' defaultValue={0}/><br/><br/>
                 <label htmlFor="bIn">blue.</label><br/>
                 <input type='number' min={0} max={255} name='bIn' id='bIn' defaultValue={0}/><br/><br/>
-                <button type="submit">submit.</button><button onClick={random}>random.</button><button type="reset">reset.</button>
+                <button type="submit">submit.</button><button onClick={randomizeColor}>random.</button><button type="reset">reset.</button>
             </fieldset>
         </form>
     )
@@ -72,26 +72,26 @@ function IndexComp(props: {colorSetter: React.Dispatch<React.SetStateAction<Colo
 }
 
 function ChipComp(props: {currentColor: Color.color}) {
-    const c0 = props.currentColor.toHSL()
+    const hsl: number[] = props.currentColor.toHSL()
     return (
         <div className='chip-container'>
-            <p className='chip-info'>{`hsl(${Math.round(c0[0])}, ${Math.round(c0[1] * 100)}%, ${Math.round(c0[2] * 100)}%)`}</p>
+            <p className='chip-info'>{`hsl(${Math.round(hsl[0])}, ${Math.round(hsl[1] * 100)}%, ${Math.round(hsl[2] * 100)}%)`}</p>
             <span className='chip' style={{background: `${props.currentColor.hex}`}}></span><br/>
             <p className='chip-info'>
                 {`rgb(${props.currentColor.red}, ${props.currentColor.green}, ${props.currentColor.blue})`}<br/>
-                hex code: {props.currentColor.hex}
+                <em>hex code:</em> {props.currentColor.hex}
             </p>
         </div>
     )
 }
 
 function ResultComp(props: {currentColor: Color.color, colorSetter: React.Dispatch<React.SetStateAction<Color.color|undefined>>}) {
-    const s = React.useContext(savedColors)
-    function save(): void {
-        let s0 = new Set(s)
-        if (!s0.has(props.currentColor)) s.push(props.currentColor)
+    const savedList: Color.color[] = React.useContext(savedColors)
+    const save = (): void => {
+        let savedSet: Set<Color.color> = new Set(savedList)
+        if (!savedSet.has(props.currentColor)) savedList.push(props.currentColor)
     }
-    function toggleHide(e, location: string): void {
+    const toggleHide = (e: React.MouseEvent<HTMLButtonElement>, location: string): void => {
         let h = document.querySelector(`#${location}`);
         (h?.getAttribute('data-vis') === 'true') ? h.setAttribute('data-vis', 'false') : h?.setAttribute('data-vis', 'true')
     }
@@ -122,7 +122,8 @@ function ResultComp(props: {currentColor: Color.color, colorSetter: React.Dispat
 }
 
 function VisibilityComp(props: {currentColor: Color.color}) {
-    const baseColors = [new Color.color(0, 0, 0), new Color.color(55, 55, 55), new Color.color(127, 127, 127), new Color.color(210, 210, 210), new Color.color(255, 255, 255)].map((l) => <VisibilityBox text={l} background={props.currentColor} key={`${props.currentColor.hex} + ${l.hex}`}/>)
+    const baseColors: React.JSX.Element[] = [new Color.color(0, 0, 0), new Color.color(55, 55, 55), new Color.color(127, 127, 127), new Color.color(210, 210, 210), new Color.color(255, 255, 255)]
+    .map((l) => <VisibilityBox text={l} background={props.currentColor} key={`${props.currentColor.hex} + ${l.hex}`}/>)
     return (
         <>
             {baseColors}
@@ -244,8 +245,8 @@ function SquareScheme(props: {currentColor: Color.color}) {
 
 function AnalogousScheme(props: {currentColor: Color.color, schemeSize: number}) {
     const analagous: Color.color[] = props.currentColor.analogous3()
-    const analagousLeft = analagous[0].analogous3()[0]
-    const analagousRight = analagous[1].analogous3()[1]
+    const analagousLeft: Color.color = analagous[0].analogous3()[0]
+    const analagousRight: Color.color = analagous[1].analogous3()[1]
     if (props.schemeSize === 3) return (
         <>
             <ChipComp currentColor={analagous[0]}/>
@@ -265,7 +266,8 @@ function AnalogousScheme(props: {currentColor: Color.color, schemeSize: number})
 }
 
 function SavedPage() {
-    const savedList: React.JSX.Element[] = React.useContext(savedColors).map((h) => <ChipComp currentColor={h} key={h.hex}/>)
+    const savedList: React.JSX.Element[] = React.useContext(savedColors)
+    .map((h) => <ChipComp currentColor={h} key={h.hex}/>)
     return (
         <>
             <h1>colors.</h1>
