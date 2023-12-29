@@ -1,11 +1,13 @@
 body {
   background-color: #eee;
+  font-family: 'Raleway', serif;
 }
 
 #content {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  gap: 10px;
 }
 #content #form-results,
 #content form,
@@ -15,8 +17,7 @@ body {
   display: flex;
   flex-direction: column;
 
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 15px;
 }
 #content form fieldset {
   display: flex;
@@ -68,14 +69,32 @@ nav ul {
   height: 100px;
   margin-top: 0%;
 }
-
 nav li {
   padding: 20px;
   list-style-type: none;
+  font-size: 18px;
+}
+nav li a {
+  text-decoration: none;
+  color: rgb(237, 144, 255);
+}
+nav li a:focus {
+  border: 2px solid #aaa;
+  background-color: #555;
+  padding: 20px;
+}
+nav li a:hover {
+  border: 2px solid rgb(244, 189, 255);
+  padding: 20px;
+}
+nav li a:active {
+  border: 2px solid rgb(216, 91, 240);
+  padding: 20px;
 }
 
 fieldset {
   background-color: #ddd;
+  border: 2px solid rgb(237, 144, 255);
 }
 
 input[id*='r'] {
@@ -93,8 +112,29 @@ input[id*='b'] {
 
 button {
   height: 50px;
+  font-family: 'Raleway', serif;
+  font-weight: 500;
+  border: 2px solid rgb(237, 144, 255);
+}
+button[type='submit'] {
+  border: 2px solid rgb(216, 91, 240);
+}
+button[type='reset'] {
+  border: 2px solid rgb(255, 112, 112);
 }
 
 *[data-vis='false'] {
   display: none !important;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Courgette', sans-serif;
+}
+h4,
+h5,
+h6 {
+  font-size: medium;
+  font-weight: bold;
 }

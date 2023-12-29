@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 
 import * as Color from 'src/colors';
 
-const savedColors = React.createContext<Color.color[]>([]);
+const savedColors: React.Context<Set<Color.color>> = React.createContext<
+  Set<Color.color>
+>(new Set<Color.color>());
 
 ReactDOM.createRoot(document.querySelector('#root')!).render(<App />);
 
@@ -145,10 +147,11 @@ function ResultComp(props: {
   currentColor: Color.color;
   colorSetter: React.Dispatch<React.SetStateAction<Color.color | undefined>>;
 }) {
-  const savedList: Color.color[] = React.useContext(savedColors);
-  const save = (): void => {
+  const savedList: Set<Color.color> = React.useContext(savedColors);
+  const toggleSave = (): void => {
     const savedSet: Set<Color.color> = new Set(savedList);
-    if (!savedSet.has(props.currentColor)) savedList.push(props.currentColor);
+    if (!savedSet.has(props.currentColor)) savedList.add(props.currentColor);
+    else savedList.delete(props.currentColor);
   };
   const toggleHide = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -161,7 +164,9 @@ function ResultComp(props: {
   };
   return (
     <>
-      <div id="form-results">
+      <div
+        id="form-results"
+        style={{ border: `3px dashed ${props.currentColor.hex}` }}>
         <h2>your color is:</h2>
         <br />
         <div id="form-color">
@@ -169,7 +174,7 @@ function ResultComp(props: {
         </div>
         <button
           className="save"
-          onClick={save}
+          onClick={toggleSave}
           style={{ border: `2px solid ${props.currentColor.hex}` }}>
           save this color.
         </button>
@@ -180,7 +185,10 @@ function ResultComp(props: {
         }}>
         show/hide results.
       </button>
-      <div id="schemes" data-vis="true">
+      <div
+        id="schemes"
+        data-vis="true"
+        style={{ border: `3px dashed ${props.currentColor.hex}` }}>
         <SchemeComp currentColor={props.currentColor} />
       </div>
       <button
@@ -189,7 +197,10 @@ function ResultComp(props: {
         }}>
         show/hide visibility.
       </button>
-      <div id="visibility" data-vis="true">
+      <div
+        id="visibility"
+        data-vis="true"
+        style={{ border: `3px dashed ${props.currentColor.hex}` }}>
         <VisibilityComp currentColor={props.currentColor} />
       </div>
       <ColorForm colorSetter={props.colorSetter} />
@@ -215,60 +226,64 @@ function VisibilityComp(props: { currentColor: Color.color }) {
 }
 function VisibilityBox(props: { text: Color.color; background: Color.color }) {
   return (
-    <div className="vis-group">
-      <h3>{`${props.text.hex} on ${props.background.hex}`}</h3>
-      <div
-        style={{
-          background: `${props.background.hex}`,
-          color: `${props.text.hex}`,
-          border: `2px solid ${props.text.hex}`,
-        }}>
-        <h2>large title.</h2>
-        <h5>subtitle.</h5>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat
-          mauris nunc congue nisi vitae suscipit tellus mauris. Vitae turpis
-          massa sed elementum tempus egestas sed sed. Venenatis cras sed felis
-          eget velit aliquet sagittis id consectetur. Urna condimentum mattis
-          pellentesque id nibh tortor id aliquet lectus. Urna porttitor rhoncus
-          dolor purus non enim. Sit amet est placerat in egestas erat imperdiet
-          sed euismod. Blandit volutpat maecenas volutpat blandit aliquam.
-          Porttitor eget dolor morbi non arcu risus quis varius. Posuere ac ut
-          consequat semper viverra nam. Ac orci phasellus egestas tellus.
-          Pharetra convallis posuere morbi leo urna. Dictumst vestibulum rhoncus
-          est pellentesque elit. Id aliquet lectus proin nibh nisl. Vel orci
-          porta non pulvinar neque laoreet suspendisse. Volutpat lacus laoreet
-          non curabitur gravida arcu ac.
-        </p>
+    <>
+      <div className="vis-group">
+        <div
+          style={{
+            background: `${props.background.hex}`,
+            color: `${props.text.hex}`,
+            border: `2px solid ${props.text.hex}`,
+          }}>
+          <h1>{`${props.text.hex} on ${props.background.hex}`}</h1>
+          <hr />
+          <h2>large title.</h2>
+          <h5>subtitle.</h5>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Consequat mauris nunc congue nisi vitae suscipit tellus mauris.
+            Vitae turpis massa sed elementum tempus egestas sed sed. Venenatis
+            cras sed felis eget velit aliquet sagittis id consectetur. Urna
+            condimentum mattis pellentesque id nibh tortor id aliquet lectus.
+            Urna porttitor rhoncus dolor purus non enim. Sit amet est placerat
+            in egestas erat imperdiet sed euismod. Blandit volutpat maecenas
+            volutpat blandit aliquam. Porttitor eget dolor morbi non arcu risus
+            quis varius. Posuere ac ut consequat semper viverra nam. Ac orci
+            phasellus egestas tellus. Pharetra convallis posuere morbi leo urna.
+            Dictumst vestibulum rhoncus est pellentesque elit. Id aliquet lectus
+            proin nibh nisl. Vel orci porta non pulvinar neque laoreet
+            suspendisse. Volutpat lacus laoreet non curabitur gravida arcu ac.
+          </p>
+        </div>
+        <div
+          style={{
+            background: `${props.text.hex}`,
+            color: `${props.background.hex}`,
+            border: `2px solid ${props.background.hex}`,
+          }}>
+          <h1>{`${props.background.hex} on ${props.text.hex}`}</h1>
+          <hr />
+          <h2>large title.</h2>
+          <h5>subtitle.</h5>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Consequat mauris nunc congue nisi vitae suscipit tellus mauris.
+            Vitae turpis massa sed elementum tempus egestas sed sed. Venenatis
+            cras sed felis eget velit aliquet sagittis id consectetur. Urna
+            condimentum mattis pellentesque id nibh tortor id aliquet lectus.
+            Urna porttitor rhoncus dolor purus non enim. Sit amet est placerat
+            in egestas erat imperdiet sed euismod. Blandit volutpat maecenas
+            volutpat blandit aliquam. Porttitor eget dolor morbi non arcu risus
+            quis varius. Posuere ac ut consequat semper viverra nam. Ac orci
+            phasellus egestas tellus. Pharetra convallis posuere morbi leo urna.
+            Dictumst vestibulum rhoncus est pellentesque elit. Id aliquet lectus
+            proin nibh nisl. Vel orci porta non pulvinar neque laoreet
+            suspendisse. Volutpat lacus laoreet non curabitur gravida arcu ac.
+          </p>
+        </div>
       </div>
-      <h3>{`${props.background.hex} on ${props.text.hex}`}</h3>
-      <div
-        style={{
-          background: `${props.text.hex}`,
-          color: `${props.background.hex}`,
-          border: `2px solid ${props.background.hex}`,
-        }}>
-        <h2>large title.</h2>
-        <h5>subtitle.</h5>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat
-          mauris nunc congue nisi vitae suscipit tellus mauris. Vitae turpis
-          massa sed elementum tempus egestas sed sed. Venenatis cras sed felis
-          eget velit aliquet sagittis id consectetur. Urna condimentum mattis
-          pellentesque id nibh tortor id aliquet lectus. Urna porttitor rhoncus
-          dolor purus non enim. Sit amet est placerat in egestas erat imperdiet
-          sed euismod. Blandit volutpat maecenas volutpat blandit aliquam.
-          Porttitor eget dolor morbi non arcu risus quis varius. Posuere ac ut
-          consequat semper viverra nam. Ac orci phasellus egestas tellus.
-          Pharetra convallis posuere morbi leo urna. Dictumst vestibulum rhoncus
-          est pellentesque elit. Id aliquet lectus proin nibh nisl. Vel orci
-          porta non pulvinar neque laoreet suspendisse. Volutpat lacus laoreet
-          non curabitur gravida arcu ac.
-        </p>
-      </div>
-    </div>
+    </>
   );
 }
 
@@ -395,7 +410,7 @@ function AnalogousScheme(props: {
 }
 
 function SavedPage() {
-  const savedList: React.JSX.Element[] = React.useContext(savedColors).map(
+  const savedList: React.JSX.Element[] = [...React.useContext(savedColors)].map(
     (h) => <ChipComp currentColor={h} key={h.hex} />
   );
   return (
