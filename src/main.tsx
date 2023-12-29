@@ -24,8 +24,14 @@ export default function App() {
         </ul>
       </nav>
       <Routes>
-        <Route path="/" Component={PalettePage} />
-        <Route path="/saved" Component={SavedPage} />
+        <Route
+          path="/"
+          Component={PalettePage}
+        />
+        <Route
+          path="/saved"
+          Component={SavedPage}
+        />
       </Routes>
     </Router>
   );
@@ -40,7 +46,10 @@ function PalettePage() {
         {!color ? (
           <IndexComp colorSetter={setColor} />
         ) : (
-          <ResultComp currentColor={color} colorSetter={setColor} />
+          <ResultComp
+            currentColor={color}
+            colorSetter={setColor}
+          />
         )}
       </div>
     </>
@@ -134,7 +143,9 @@ function ChipComp(props: { currentColor: Color.color }) {
         className="chip"
         style={{ background: `${props.currentColor.hex}` }}></span>
       <br />
-      <p className="chip-info">
+      <p
+        className="chip-info"
+        onClick={() => {}}>
         {`rgb(${props.currentColor.red}, ${props.currentColor.green}, ${props.currentColor.blue})`}
         <br />
         <em>hex code:</em> {props.currentColor.hex}
@@ -157,6 +168,7 @@ function ResultComp(props: {
     e: React.MouseEvent<HTMLButtonElement>,
     location: string
   ): void => {
+    e.preventDefault();
     const h = document.querySelector(`#${location}`);
     h?.getAttribute('data-vis') === 'true'
       ? h.setAttribute('data-vis', 'false')
@@ -290,19 +302,35 @@ function VisibilityBox(props: { text: Color.color; background: Color.color }) {
 function SchemeComp(props: { currentColor: Color.color }) {
   return (
     <>
-      <h3>monochromatic scheme:</h3>
-      <div id="mono">
-        <MonoScheme currentColor={props.currentColor} />
+      <h3>tints:</h3>
+      <div id="tint">
+        <MonoScheme
+          currentColor={props.currentColor}
+          tint={true}
+        />
       </div>
       <br />
+      <h3>shades:</h3>
+      <div id="shade">
+        <MonoScheme
+          currentColor={props.currentColor}
+          tint={false}
+        />
+      </div>
       <h3>complementary scheme:</h3>
       <div id="comp">
-        <CompScheme currentColor={props.currentColor} split={false} />
+        <CompScheme
+          currentColor={props.currentColor}
+          split={false}
+        />
       </div>
       <br />
       <h3>split complementary scheme:</h3>
       <div id="split-comp">
-        <CompScheme currentColor={props.currentColor} split={true} />
+        <CompScheme
+          currentColor={props.currentColor}
+          split={true}
+        />
       </div>
       <h3>triadic scheme:</h3>
       <div id="triadic">
@@ -314,46 +342,115 @@ function SchemeComp(props: { currentColor: Color.color }) {
       </div>
       <h3>analogous scheme (3 color):</h3>
       <div id="analogous3">
-        <AnalogousScheme currentColor={props.currentColor} schemeSize={3} />
+        <AnalogousScheme
+          currentColor={props.currentColor}
+          schemeSize={3}
+        />
       </div>
       <h3>analogous scheme (5 color):</h3>
       <div id="analogous5">
-        <AnalogousScheme currentColor={props.currentColor} schemeSize={5} />
+        <AnalogousScheme
+          currentColor={props.currentColor}
+          schemeSize={5}
+        />
       </div>
     </>
   );
 }
 
-function MonoScheme(props: { currentColor: Color.color }) {
+function MonoScheme(props: { currentColor: Color.color; tint: boolean }) {
+  let schemeColors;
+  if (props.tint) {
+    schemeColors = [
+      props.currentColor,
+      props.currentColor.lighten(0.1),
+      props.currentColor.lighten(0.2),
+      props.currentColor.lighten(0.3),
+      props.currentColor.lighten(0.4),
+      props.currentColor.lighten(0.5),
+      props.currentColor.lighten(0.6),
+    ].map((c) => (
+      <ChipComp
+        currentColor={c}
+        key={c.hex}
+      />
+    ));
+  } else {
+    schemeColors = [
+      props.currentColor,
+      props.currentColor.darken(0.1),
+      props.currentColor.darken(0.2),
+      props.currentColor.darken(0.3),
+      props.currentColor.darken(0.4),
+      props.currentColor.darken(0.5),
+      props.currentColor.darken(0.6),
+    ].map((c) => (
+      <ChipComp
+        currentColor={c}
+        key={c.hex}
+      />
+    ));
+  }
   return (
     <>
-      <ChipComp currentColor={props.currentColor.darken(0.3)} />
-      <ChipComp currentColor={props.currentColor.darken(0.2)} />
-      <ChipComp currentColor={props.currentColor.darken(0.1)} />
-      <ChipComp currentColor={props.currentColor} />
-      <ChipComp currentColor={props.currentColor.lighten(0.1)} />
-      <ChipComp currentColor={props.currentColor.lighten(0.2)} />
-      <ChipComp currentColor={props.currentColor.lighten(0.3)} />
+      <div className="results">{schemeColors}</div>
     </>
   );
 }
 
 function CompScheme(props: { currentColor: Color.color; split: boolean }) {
+  const complement: Color.color = props.currentColor.comp();
+  const splitComp: Color.color[] = complement.analogous3();
+  const copyScheme = (split: boolean): void => {
+    let scheme: string = '';
+    !split
+      ? (scheme = `${props.currentColor.hex}\n${complement.hex}`)
+      : (scheme = `${props.currentColor.hex}\n${splitComp[0].hex}\n${splitComp[1].hex}`);
+    if (!navigator.clipboard) {
+      try {
+        document.execCommand('copy', false, scheme);
+      } catch (e) {
+        alert('could not copy scheme.');
+        console.error(e);
+      }
+    } else {
+      navigator.clipboard
+        .writeText(scheme)
+        .catch(() => alert('could not copy scheme.'));
+    }
+    alert('scheme copied to clipboard.');
+  };
   if (!props.split)
     return (
       <>
-        <ChipComp currentColor={props.currentColor} />
-        <ChipComp currentColor={props.currentColor.comp()} />
+        <div className="results">
+          <ChipComp currentColor={props.currentColor} />
+          <ChipComp currentColor={props.currentColor.comp()} />
+        </div>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            copyScheme(props.split);
+          }}>
+          copy this scheme.
+        </button>
       </>
     );
   else {
-    const complement: Color.color = props.currentColor.comp();
-    const splitComp: Color.color[] = complement.analogous3();
     return (
       <>
-        <ChipComp currentColor={props.currentColor} />
-        <ChipComp currentColor={splitComp[0]} />
-        <ChipComp currentColor={splitComp[1]} />
+        <div className="results">
+          <ChipComp currentColor={props.currentColor} />
+          <ChipComp currentColor={splitComp[0]} />
+          <ChipComp currentColor={splitComp[1]} />
+        </div>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            copyScheme(props.split);
+          }}>
+          copy this scheme.
+        </button>
       </>
     );
   }
@@ -361,23 +458,73 @@ function CompScheme(props: { currentColor: Color.color; split: boolean }) {
 
 function TriadicScheme(props: { currentColor: Color.color }) {
   const triad: Color.color[] = props.currentColor.triadic();
+  const copyScheme = (): void => {
+    const scheme: string = `${props.currentColor.hex}\n${triad[0].hex}\n${triad[1].hex}`;
+    if (!navigator.clipboard) {
+      try {
+        document.execCommand('copy', false, scheme);
+      } catch (e) {
+        alert('could not copy scheme.');
+        console.error(e);
+      }
+    } else {
+      navigator.clipboard
+        .writeText(scheme)
+        .catch(() => alert('could not copy scheme.'));
+    }
+    alert('scheme copied to clipboard.');
+  };
   return (
     <>
-      <ChipComp currentColor={triad[0]} />
-      <ChipComp currentColor={props.currentColor} />
-      <ChipComp currentColor={triad[1]} />
+      <div className="results">
+        <ChipComp currentColor={triad[0]} />
+        <ChipComp currentColor={props.currentColor} />
+        <ChipComp currentColor={triad[1]} />
+      </div>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          copyScheme();
+        }}>
+        copy this scheme.
+      </button>
     </>
   );
 }
 
 function SquareScheme(props: { currentColor: Color.color }) {
   const square: Color.color[] = props.currentColor.square();
+  const copyScheme = (): void => {
+    const scheme: string = `${props.currentColor.hex}\n${square[0].hex}\n${square[1].hex}\n${square[2].hex}`;
+    if (!navigator.clipboard) {
+      try {
+        document.execCommand('copy', false, scheme);
+      } catch (e) {
+        alert('could not copy scheme.');
+        console.error(e);
+      }
+    } else {
+      navigator.clipboard
+        .writeText(scheme)
+        .catch(() => alert('could not copy scheme.'));
+    }
+    alert('scheme copied to clipboard.');
+  };
   return (
     <>
-      <ChipComp currentColor={props.currentColor} />
-      <ChipComp currentColor={square[0]} />
-      <ChipComp currentColor={square[1]} />
-      <ChipComp currentColor={square[2]} />
+      <div className="results">
+        <ChipComp currentColor={props.currentColor} />
+        <ChipComp currentColor={square[0]} />
+        <ChipComp currentColor={square[1]} />
+        <ChipComp currentColor={square[2]} />
+      </div>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          copyScheme();
+        }}>
+        copy this scheme.
+      </button>
     </>
   );
 }
@@ -389,29 +536,71 @@ function AnalogousScheme(props: {
   const analagous: Color.color[] = props.currentColor.analogous3();
   const analagousLeft: Color.color = analagous[0].analogous3()[0];
   const analagousRight: Color.color = analagous[1].analogous3()[1];
+  const copyScheme = (schemeSize: number): void => {
+    let scheme: string = '';
+    schemeSize === 3
+      ? (scheme = `${props.currentColor.hex}\n${analagous[0].hex}\n${analagous[1].hex}`)
+      : (scheme = `${props.currentColor.hex}\n${analagous[0].hex}\n${analagousLeft.hex}\n${analagous[1].hex}\n${analagousRight.hex}`);
+    if (!navigator.clipboard) {
+      try {
+        document.execCommand('copy', false, scheme);
+      } catch (e) {
+        alert('could not copy scheme.');
+        console.error(e);
+      }
+    } else {
+      navigator.clipboard
+        .writeText(scheme)
+        .catch(() => alert('could not copy scheme.'));
+    }
+    alert('scheme copied to clipboard.');
+  };
   if (props.schemeSize === 3)
     return (
       <>
-        <ChipComp currentColor={analagous[0]} />
-        <ChipComp currentColor={props.currentColor} />
-        <ChipComp currentColor={analagous[1]} />
+        <div className="results">
+          <ChipComp currentColor={analagous[0]} />
+          <ChipComp currentColor={props.currentColor} />
+          <ChipComp currentColor={analagous[1]} />
+        </div>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            copyScheme(3);
+          }}>
+          copy this scheme.
+        </button>
       </>
     );
   else
     return (
       <>
-        <ChipComp currentColor={analagousLeft} />
-        <ChipComp currentColor={analagous[0]} />
-        <ChipComp currentColor={props.currentColor} />
-        <ChipComp currentColor={analagous[1]} />
-        <ChipComp currentColor={analagousRight} />
+        <div className="results">
+          <ChipComp currentColor={analagousLeft} />
+          <ChipComp currentColor={analagous[0]} />
+          <ChipComp currentColor={props.currentColor} />
+          <ChipComp currentColor={analagous[1]} />
+          <ChipComp currentColor={analagousRight} />
+        </div>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            copyScheme(5);
+          }}>
+          copy this scheme.
+        </button>
       </>
     );
 }
 
 function SavedPage() {
   const savedList: React.JSX.Element[] = [...React.useContext(savedColors)].map(
-    (h) => <ChipComp currentColor={h} key={h.hex} />
+    (h) => (
+      <ChipComp
+        currentColor={h}
+        key={h.hex}
+      />
+    )
   );
   return (
     <>

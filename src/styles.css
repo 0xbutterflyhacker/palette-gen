@@ -1,5 +1,6 @@
 body {
-  background-color: #eee;
+  background: linear-gradient(#eee, #fffeee 90%) no-repeat;
+  background-attachment: fixed;
   font-family: 'Raleway', serif;
 }
 
@@ -28,9 +29,14 @@ body {
   display: flex;
   justify-content: center;
 }
-#content #schemes [id] {
+#content #schemes [class='results'] {
   display: flex;
   justify-content: space-around;
+}
+#content #schemes div[id] {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 #results #colors {
   display: flex;
@@ -101,19 +107,29 @@ input[id*='r'] {
   border: none;
   border-bottom: 2px solid red;
 }
+label[for='rIn'] {
+  text-decoration: underline dashed red 1.5px;
+}
 input[id*='g'] {
   border: none;
   border-bottom: 2px solid green;
 }
+label[for='gIn'] {
+  text-decoration: underline dashed green 1.5px;
+}
 input[id*='b'] {
   border: none;
   border-bottom: 2px solid blue;
+}
+label[for='bIn'] {
+  text-decoration: underline dashed blue 1.5px;
 }
 
 button {
   height: 50px;
   font-family: 'Raleway', serif;
   font-weight: 500;
+  font-size: 15px;
   border: 2px solid rgb(237, 144, 255);
 }
 button[type='submit'] {
